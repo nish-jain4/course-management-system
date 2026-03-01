@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
     <h1>Welcome to the CMS</h1>
@@ -5,3 +6,390 @@
     <button><a href="/register">New here? Register</a></button>
     <button><a href="/login">Login</a></button>
 </html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourseHub - Learn Future Skills</title>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    
+    <!-- Dynamic Pixel Background -->
+    <canvas id="pixelCanvas"></canvas>
+    <div class="bg-overlay"></div>
+
+    <!-- ================================
+         NAVIGATION BAR
+    ================================ -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-content">
+                
+                <!-- Logo -->
+                <a href="{{ url_for('index') }}" class="logo">
+                    <i class="fa-solid fa-cube"></i>Pixel<span>Learn</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="nav-menu">
+                    <a href="#" class="nav-link">Explore</a>
+                    <a href="#courses" class="nav-link">Courses</a>
+                    <a href="#companies" class="nav-link">Hiring Partners</a>
+                    <a href="#about" class="nav-link">About Us</a>
+                </div>
+
+                <!-- Auth Buttons / Profile -->
+                <div class="nav-actions">
+                    
+                    <!-- Login Link -->
+                    <a href="{{ url_for('login') }}" class="nav-link">
+                        Log In
+                    </a>
+                    
+                    <!-- Register Button -->
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">
+                        Register
+                    </a>
+
+                    
+                    <div class="profile-container">
+                        <button class="profile-btn">
+                            <img src="https://i.pravatar.cc/150?img=3" alt="Profile" class="profile-img">
+                        </button>
+                        <div class="profile-dropdown">
+                            <a href="#"><i class="fa-solid fa-user mr-2"></i> My Profile</a>
+                            <a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-gauge mr-2"></i> Dashboard</a>
+                            <a href="{{ url_for('logout') }}" class="logout"><i class="fa-solid fa-right-from-bracket mr-2"></i> Logout</a>
+                        </div>
+                    </div>
+                
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#" class="nav-link">Explore</a>
+            <a href="#courses" class="nav-link">Courses</a>
+            <a href="#companies" class="nav-link">Hiring Partners</a>
+            <a href="#about" class="nav-link">About Us</a>
+            <a href="{{ url_for('login') }}" class="nav-link">Log In</a>
+            <a href="{{ url_for('register') }}" class="btn btn-primary" style="margin-top: 1rem;">Register</a>
+        </div>
+    </nav>
+
+    <!-- ================================
+         HERO SECTION
+    ================================ -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Master the Future with<br>
+                <span class="highlight">Interactive Pixel Learning</span>
+            </h1>
+            <p class="hero-subtitle">
+                Access 500+ high-quality courses designed by industry experts. 
+                From Python to UI/UX, upgrade your skills and get hired by top tech giants.
+            </p>
+            <div class="hero-buttons">
+                <a href="#courses" class="btn btn-primary">
+                    <i class="fa-solid fa-compass mr-2"></i> Explore Courses
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    <i class="fa-solid fa-play mr-2"></i> View Demo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         COURSES SECTION
+    ================================ -->
+    <section id="courses" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-tag">Popular Tracks</p>
+                <h2 class="section-title">Choose Your Path</h2>
+            </div>
+
+            <div class="courses-grid">
+                
+                <!-- Course Card 1 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <i class="fa-brands fa-python"></i>
+                        <span class="course-badge badge-bestseller">BESTSELLER</span>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-meta">
+                            <span class="course-category">Development</span>
+                            <div class="course-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                            </div>
+                        </div>
+                        <h3 class="course-title">Full Stack Python</h3>
+                        <p class="course-description">Master Flask, Django, and modern database management.</p>
+                        <div class="course-tags">
+                            <span class="tag tag-certificate"><i class="fa-solid fa-check"></i> Certificate</span>
+                            <span class="tag tag-duration"><i class="fa-solid fa-clock"></i> 12 Weeks</span>
+                        </div>
+                        <button class="btn-course">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Course Card 2 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <i class="fa-solid fa-palette"></i>
+                        <span class="course-badge badge-trending">TRENDING</span>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-meta">
+                            <span class="course-category">Design</span>
+                            <div class="course-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                        </div>
+                        <h3 class="course-title">UI/UX Design Master</h3>
+                        <p class="course-description">Learn Figma, Adobe XD, and user research methodologies.</p>
+                        <div class="course-tags">
+                            <span class="tag tag-certificate"><i class="fa-solid fa-check"></i> Certificate</span>
+                            <span class="tag tag-duration"><i class="fa-solid fa-clock"></i> 8 Weeks</span>
+                        </div>
+                        <button class="btn-course">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Course Card 3 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <i class="fa-brands fa-js"></i>
+                        <span class="course-badge badge-trending">HOT</span>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-meta">
+                            <span class="course-category">Development</span>
+                            <div class="course-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+                        </div>
+                        <h3 class="course-title">React & Node.js</h3>
+                        <p class="course-description">Build modern full-stack web applications from scratch.</p>
+                        <div class="course-tags">
+                            <span class="tag tag-certificate"><i class="fa-solid fa-check"></i> Certificate</span>
+                            <span class="tag tag-duration"><i class="fa-solid fa-clock"></i> 10 Weeks</span>
+                        </div>
+                        <button class="btn-course">View Details</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         COMPANIES SECTION
+    ================================ -->
+    <section id="companies" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-tag">Top Hiring Partners</p>
+                <h2 class="section-title">Get Hired By Industry Leaders</h2>
+            </div>
+
+            <div class="companies-grid">
+                <div class="company-logo">
+                    <i class="fa-brands fa-google"></i>
+                </div>
+                <div class="company-logo">
+                    <i class="fa-brands fa-amazon"></i>
+                </div>
+                <div class="company-logo">
+                    <i class="fa-brands fa-microsoft"></i>
+                </div>
+                <div class="company-logo">
+                    <i class="fa-brands fa-meta"></i>
+                </div>
+                <div class="company-logo">
+                    <i class="fa-brands fa-apple"></i>
+                </div>
+                <div class="company-logo">
+                    <i class="fa-brands fa-netflix"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         ABOUT SECTION
+    ================================ -->
+    <section id="about" class="section">
+        <div class="section-container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>About PixelLearn</h3>
+                    <p>
+                        We are dedicated to providing world-class education in technology. 
+                        Our platform connects learners with industry experts through interactive 
+                        courses, hands-on projects, and career guidance.
+                    </p>
+                    <p>
+                        Join thousands of students who have transformed their careers 
+                        with our comprehensive learning paths.
+                    </p>
+                    
+                    <div class="about-stats">
+                        <div class="stat-box">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Courses</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">50K+</div>
+                            <div class="stat-label">Students</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">120+</div>
+                            <div class="stat-label">Hiring Partners</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         FOOTER
+    ================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <i class="fa-solid fa-cube"></i>Pixel<span>Learn</span>
+                    </a>
+                    <p>Empowering learners worldwide with cutting-edge technology courses.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Explore</a></li>
+                        <li><a href="#courses">Courses</a></li>
+                        <li><a href="#about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PixelLearn. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================================
+         JAVASCRIPT
+    ================================ -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Pixel Background Animation
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        function createParticles() {
+            particles = [];
+            const numParticles = Math.floor((width * height) / 15000);
+            for (let i = 0; i < numParticles; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2 + 1,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    opacity: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+                
+                ctx.fillStyle = `rgba(99, 102, 241, ${p.opacity})`; // Brand color
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            resize();
+            createParticles();
+        });
+        
+        resize();
+        createParticles();
+        animate();
+    </script>
+</body>
+</html>
+

@@ -1,3 +1,139 @@
-<h1> Dashboard Page</h1>
-<p>This is the dashboard page.</p>
-<button href="/">Home</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+  <div class="dashboard-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        <div>
+          <h1>Redwhale</h1>
+          <p>Growth &amp; Marketing</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="" class="menu-link active">
+          <span class="dot"></span>
+          Dashboard
+        </a>
+        <a href="" class="menu-link">
+          <span class="dot"></span>
+          Activity
+        </a>
+        <a href="" class="menu-link">
+          <span class="dot"></span>
+          Settings
+        </a>
+        <a href="" class="menu-link">
+          <span class="dot"></span>
+          Bookmarks
+        </a>
+      </nav>
+
+      <button class="invite-btn" type="button">+ Invite new member</button>
+    </aside>
+
+    <main class="main-area">
+      <section class="top-strip card">
+        <div class="avatars">
+          <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=100&q=60" alt="avatar">
+          <img src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?auto=format&fit=crop&w=100&q=60" alt="avatar">
+          <img src="https://images.unsplash.com/photo-1542178243-bc20204b769f?auto=format&fit=crop&w=100&q=60" alt="avatar">
+          <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=100&q=60" alt="avatar">
+          <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=100&q=60" alt="avatar">
+          <button type="button">+ Add</button>
+        </div>
+      </section>
+
+      <section class="performance">
+        <h2>30 Days Performance</h2>
+        <div class="metric-grid">
+          <article class="metric-card purple">
+            <p>Views</p>
+            <h3>7,482,120</h3>
+          </article>
+          <article class="metric-card coral">
+            <p>Follows</p>
+            <h3>54,364</h3>
+          </article>
+          <article class="metric-card cyan">
+            <p>Likes</p>
+            <h3>125,685</h3>
+          </article>
+        </div>
+      </section>
+
+      <section class="analytics-grid">
+        <article class="card chart-card">
+          <div class="card-head">
+            <h3>Analytics</h3>
+            <span>Daily Views</span>
+          </div>
+          <div class="line-chart" aria-label="Chart placeholder"></div>
+        </article>
+        <article class="card donut-card">
+          <h3>Events Distribution</h3>
+          <div class="donut-wrap">
+            <div class="donut"><span>300k</span></div>
+          </div>
+          <ul>
+            <li><span class="c1"></span>Likes</li>
+            <li><span class="c2"></span>Views</li>
+            <li><span class="c3"></span>Follows</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="bottom-targets">
+        <article class="card target">
+          <div>
+            <h3>Weekly Target</h3>
+            <p>25% achieved</p>
+          </div>
+          <div class="ring small">25%</div>
+        </article>
+        <article class="card target accent">
+          <div>
+            <h3>Monthly Target</h3>
+            <p>50% achieved</p>
+          </div>
+          <div class="ring">50%</div>
+        </article>
+      </section>
+    </main>
+
+    <aside class="profile-panel card">
+      <header>
+        <h2>Hi, Omid</h2>
+        <p>Good morning!</p>
+      </header>
+      <img class="hero" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=60" alt="Profile">
+      <h3>Omid Armin</h3>
+      <small>UI/UX Designer @Redwhale</small>
+      <div class="stats">
+        <div><strong>786K</strong><span>Followers</span></div>
+        <div><strong>298</strong><span>Following</span></div>
+        <div><strong>438</strong><span>Posts</span></div>
+      </div>
+      <div class="panel-actions">
+        <button type="button" class="primary">View Profile</button>
+        <button type="button">Edit Profile</button>
+      </div>
+      <div class="gallery">
+        <img src="https://images.unsplash.com/photo-1482192505345-5655af888cc4?auto=format&fit=crop&w=200&q=60" alt="gallery">
+        <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=200&q=60" alt="gallery">
+        <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=200&q=60" alt="gallery">
+        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=200&q=60" alt="gallery">
+        <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=200&q=60" alt="gallery">
+        <img src="https://images.unsplash.com/photo-1431440869543-efaf3388c585?auto=format&fit=crop&w=200&q=60" alt="gallery">
+      </div>
+    </aside>
+  </div>
+</body>
+</html>
