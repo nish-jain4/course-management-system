@@ -1,0 +1,135 @@
+.catalog-section {
+    padding: 1rem 0 2rem;
+}
+
+.detail-layout {
+    display: grid;
+    grid-template-columns: 1.55fr 0.95fr;
+    gap: 1rem;
+}
+
+.detail-panel,
+.empty-state {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(31, 41, 51, 0.08);
+    box-shadow: 0 24px 60px rgba(86, 61, 44, 0.12);
+    border-radius: 28px;
+}
+
+.detail-main,
+.detail-sidebar {
+    display: grid;
+    gap: 1rem;
+    padding: 1.35rem;
+}
+
+.detail-title {
+    margin: 1rem 0 0.75rem;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.04;
+}
+
+.detail-copy {
+    color: var(--slate);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+}
+
+.detail-meta {
+    margin-bottom: 1rem;
+}
+
+.detail-section {
+    margin-top: 1rem;
+}
+
+.module-list,
+.review-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.module-card {
+    padding: 1rem 1.1rem;
+    background: rgba(250, 248, 244, 0.82);
+    border: 1px solid rgba(31, 41, 51, 0.08);
+    border-radius: 22px;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.module-card h3,
+.module-card p,
+.module-card strong {
+    margin: 0;
+}
+
+.sidebar-block {
+    padding: 1.2rem;
+    border-radius: 24px;
+    background: rgba(250, 248, 244, 0.82);
+    border: 1px solid rgba(31, 41, 51, 0.08);
+}
+
+.sidebar-block h2 {
+    margin: 0 0 0.75rem;
+}
+
+.sidebar-block p {
+    margin: 0 0 0.8rem;
+    color: var(--slate);
+}
+
+.mini-form {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.mini-form label {
+    font-weight: 700;
+}
+
+.mini-form input,
+.mini-form select,
+.mini-form textarea {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(31, 41, 51, 0.12);
+    background: rgba(255, 255, 255, 0.82);
+    resize: vertical;
+}
+
+.payment-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    color: var(--slate);
+    font-size: 0.95rem;
+}
+
+.payment-row span {
+    padding: 0.45rem 0.7rem;
+    background: rgba(31, 41, 51, 0.06);
+    border-radius: 999px;
+}
+
+.stacked-row {
+    flex-direction: column;
+    align-items: start;
+}
+
+.empty-state {
+    padding: 1.7rem;
+    text-align: center;
+}
+
+.compact-empty {
+    padding: 1.2rem;
+}
+
+@media (max-width: 960px) {
+    .detail-layout {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}{{ detail.course.course_name }} | CMS Portal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='course_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="catalog-section">
+    <div class="container detail-layout">
+        <section class="detail-panel detail-main">
+            <div class="course-card-top">
+                <span class="course-icon">{{ detail.course.category_name[:2]|upper }}</span>
+                <span class="course-badge">Rs. {{ '%.2f'|format(detail.course.price) }}</span>
+            </div>
+            <h1 class="detail-title">{{ detail.course.course_name }}</h1>
+            <p class="detail-copy">{{ detail.course.description or "No description has been added yet." }}</p>
+
+            <div class="course-meta detail-meta">
+                <span>{{ detail.course.category_name }}</span>
+                <span>{{ detail.course.instructor_name }}</span>
+                <span>{{ detail.course.module_total }} modules</span>
+                <span>{{ detail.course.review_total }} reviews</span>
+                <span>{{ detail.course.avg_rating }} / 5</span>
+            </div>
+
+            <div class="detail-section">
+                <div class="section-heading compact">
+                    <div>
+                        <p class="eyebrow">Course Content</p>
+                        <h2>What you will learn</h2>
+                    </div>
+                </div>
+
+                {% if detail.content %}
+                    <div class="module-list">
+                        {% for module in detail.content %}
+                            <article class="module-card">
+                                <div>
+                                    <strong>Module {{ module["module_number"] }}</strong>
+                                    <h3>{{ module["title"] }}</h3>
+                                </div>
+                                <a class="text-link" href="{{ module['video_url'] }}" target="_blank" rel="noreferrer">Open video</a>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state compact-empty">
+                        <h3>No modules added yet</h3>
+                        <p>Modules will appear here once the instructor uploads the course lessons.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="detail-section">
+                <div class="section-heading compact">
+                    <div>
+                        <p class="eyebrow">Reviews</p>
+                        <h2>What learners are saying</h2>
+                    </div>
+                </div>
+
+                {% if detail.reviews %}
+                    <div class="review-list">
+                        {% for review in detail.reviews %}
+                            <article class="module-card">
+                                <div>
+                                    <strong>{{ review["username"] }}</strong>
+                                    <h3>{{ review["rating"] }} / 5</h3>
+                                </div>
+                                <p>{{ review["comment"] or "No written comment." }}</p>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state compact-empty">
+                        <h3>No reviews yet</h3>
+                        <p>Enroll and submit the first review from this page.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <aside class="detail-panel detail-sidebar">
+            {% if detail.enrollment %}
+                <div class="sidebar-block">
+                    <p class="eyebrow">Enrollment</p>
+                    <h2>{{ detail.enrollment.status }}</h2>
+                    <p>Enrolled on {{ detail.enrollment.enrollment_date.strftime('%d %b %Y') if detail.enrollment.enrollment_date else 'N/A' }}</p>
+                    <div class="payment-row stacked-row">
+                        <span>Amount: Rs. {{ '%.2f'|format(detail.enrollment.amount or detail.course.price) }}</span>
+                        <span>Method: {{ detail.enrollment.payment_method or 'N/A' }}</span>
+                        <span>Status: {{ detail.enrollment.payment_status or 'N/A' }}</span>
+                    </div>
+                </div>
+            {% elif current_user.is_authenticated %}
+                <div class="sidebar-block">
+                    <p class="eyebrow">Get Access</p>
+                    <h2>Unlock this course for Rs. {{ '%.2f'|format(detail.course.price) }}</h2>
+                    <p>Start with the overview here, then choose a payment method below to enroll and open the full course.</p>
+                    <form method="POST" action="{{ url_for('enroll', course_id=detail.course.course_id) }}" class="mini-form">
+                        <label for="payment_method">Payment method</label>
+                        <select id="payment_method" name="payment_method" required>
+                            {% for method in payment_methods %}
+                                <option value="{{ method }}">{{ method }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="cta-button compact" type="submit">Pay & Enroll</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="sidebar-block">
+                    <p class="eyebrow">Get Access</p>
+                    <h2>Unlock this course for Rs. {{ '%.2f'|format(detail.course.price) }}</h2>
+                    <p>You can read the short description here. Log in to choose a payment method and get full access to the course.</p>
+                    <div class="payment-row">
+                        {% for method in payment_methods %}
+                            <span>{{ method }}</span>
+                        {% endfor %}
+                    </div>
+                    <a class="cta-button compact" href="{{ url_for('login', next=url_for('course_detail', course_id=detail.course.course_id)) }}">Log in to continue</a>
+                </div>
+            {% endif %}
+
+            {% if current_user.is_authenticated and detail.enrollment %}
+                <div class="sidebar-block">
+                    <p class="eyebrow">Review This Course</p>
+                    <form method="POST" action="{{ url_for('submit_review', course_id=detail.course.course_id) }}" class="mini-form">
+                        <label for="rating">Rating</label>
+                        <input type="number" id="rating" name="rating" min="1" max="5" step="0.1" value="{{ detail.my_review.rating if detail.my_review else '' }}" required>
+
+                        <label for="comment">Comment</label>
+                        <textarea id="comment" name="comment" rows="4" placeholder="Share your feedback">{{ detail.my_review.comment if detail.my_review else '' }}</textarea>
+
+                        <button class="cta-button compact secondary" type="submit">Save Review</button>
+                    </form>
+                </div>
+            {% endif %}
+
+            {% if can_edit %}
+                <div class="sidebar-block">
+                    <p class="eyebrow">Add Module</p>
+                    <form method="POST" action="{{ url_for('add_course_content', course_id=detail.course.course_id) }}" class="mini-form">
+                        <label for="title">Module title</label>
+                        <input type="text" id="title" name="title" required>
+
+                        <label for="video_url">Video URL</label>
+                        <input type="url" id="video_url" name="video_url" required>
+
+                        <label for="module_number">Module number</label>
+                        <input type="number" id="module_number" name="module_number" min="1" required>
+
+                        <button class="cta-button compact" type="submit">Add Module</button>
+                    </form>
+                </div>
+            {% endif %}
+        </aside>
+    </div>
+</section>
+{% endblock %}

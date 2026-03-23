@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Create Course | CMS Portal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='create_course.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container auth-layout">
+        <div class="auth-copy">
+            <p class="eyebrow">Create Course</p>
+            <h1>Create a course students will want to open.</h1>
+            <p>Add the essentials here, then head to the course page to upload modules and shape the learning experience.</p>
+        </div>
+        <div class="auth-card">
+            <form method="POST" action="{{ url_for('create_course') }}" class="auth-form">
+                <label for="course_name">Course name</label>
+                <input type="text" id="course_name" name="course_name" placeholder="Flask Fundamentals" required>
+
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4" placeholder="What will students learn?"></textarea>
+
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" min="0" step="0.01" placeholder="1999.00" required>
+
+                <label for="category_id">Category</label>
+                <select id="category_id" name="category_id" required>
+                    <option value="">Select a category</option>
+                    {% for category in categories %}
+                        <option value="{{ category['category_id'] }}">{{ category["category_name"] }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="form-submit">Create Course</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

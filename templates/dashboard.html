@@ -1,139 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
-</head>
-<body>
-  <div class="dashboard-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-        <div>
-          <h1>Redwhale</h1>
-          <p>Growth &amp; Marketing</p>
+{% extends "base.html" %}
+
+{% block title %}Dashboard | CMS Portal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container dashboard-stack">
+        <div class="dashboard-header">
+            <div>
+                <p class="eyebrow">Dashboard</p>
+                <h1>{{ user.username }}, here is your learning hub.</h1>
+                <p>See what you are enrolled in, jump back into lessons, and keep your progress moving. If you teach, your course tools are here too.</p>
+            </div>
+            {% if user.can_manage_courses %}
+                <a class="cta-button secondary" href="{{ url_for('create_course') }}">Create Course</a>
+            {% else %}
+                <a class="cta-button secondary" href="{{ url_for('course') }}">Browse Courses</a>
+            {% endif %}
         </div>
-      </div>
 
-      <nav class="menu">
-        <a href="" class="menu-link active">
-          <span class="dot"></span>
-          Dashboard
-        </a>
-        <a href="" class="menu-link">
-          <span class="dot"></span>
-          Activity
-        </a>
-        <a href="" class="menu-link">
-          <span class="dot"></span>
-          Settings
-        </a>
-        <a href="" class="menu-link">
-          <span class="dot"></span>
-          Bookmarks
-        </a>
-      </nav>
-
-      <button class="invite-btn" type="button">+ Invite new member</button>
-    </aside>
-
-    <main class="main-area">
-      <section class="top-strip card">
-        <div class="avatars">
-          <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=100&q=60" alt="avatar">
-          <img src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?auto=format&fit=crop&w=100&q=60" alt="avatar">
-          <img src="https://images.unsplash.com/photo-1542178243-bc20204b769f?auto=format&fit=crop&w=100&q=60" alt="avatar">
-          <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=100&q=60" alt="avatar">
-          <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=100&q=60" alt="avatar">
-          <button type="button">+ Add</button>
+        <div class="dashboard-metrics">
+            <article class="dashboard-card metric-card">
+                <span>Total enrollments</span>
+                <strong>{{ stats.enrolled_total }}</strong>
+            </article>
+            <article class="dashboard-card metric-card warm">
+                <span>Enrolled status</span>
+                <strong>{{ stats.enrolled_status_total }}</strong>
+            </article>
+            <article class="dashboard-card metric-card cool">
+                <span>Completed status</span>
+                <strong>{{ stats.completed_total }}</strong>
+            </article>
+            <article class="dashboard-card metric-card muted">
+                <span>Total paid</span>
+                <strong>Rs. {{ '%.2f'|format(stats.total_paid) }}</strong>
+            </article>
         </div>
-      </section>
 
-      <section class="performance">
-        <h2>30 Days Performance</h2>
-        <div class="metric-grid">
-          <article class="metric-card purple">
-            <p>Views</p>
-            <h3>7,482,120</h3>
-          </article>
-          <article class="metric-card coral">
-            <p>Follows</p>
-            <h3>54,364</h3>
-          </article>
-          <article class="metric-card cyan">
-            <p>Likes</p>
-            <h3>125,685</h3>
-          </article>
+        <div class="dashboard-columns">
+            <section class="dashboard-panel">
+                <div class="section-heading compact">
+                    <div>
+                        <p class="eyebrow">My Courses</p>
+                        <h2>Keep your progress up to date</h2>
+                    </div>
+                </div>
+
+                {% if enrollments %}
+                    <div class="enrollment-list">
+                        {% for item in enrollments %}
+                            <article class="enrollment-card">
+                                <div class="enrollment-head">
+                                    <div>
+                                        <span class="course-icon small">CR</span>
+                                        <div>
+                                            <h3>{{ item["course_name"] }}</h3>
+                                            <p>{{ item["category_name"] }} &middot; {{ item["instructor_name"] }}</p>
+                                        </div>
+                                    </div>
+                                    <a class="tiny-button" href="{{ url_for('course_detail', course_id=item['course_id']) }}">View</a>
+                                </div>
+
+                                <p class="course-summary">{{ item["description"] or "No description has been added yet." }}</p>
+
+                                <div class="progress-block">
+                                    <div class="progress-meta">
+                                        <span>{{ item["module_total"] }} modules</span>
+                                        <strong data-status-label="{{ item['course_id'] }}">{{ item["status"] }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="payment-row">
+                                    <span>Paid: Rs. {{ '%.2f'|format(item["amount"] or item["price"]) }}</span>
+                                    <span>{{ item["payment_method"] or 'No method' }}</span>
+                                    <span>{{ item["payment_status"] or 'No payment row' }}</span>
+                                </div>
+
+                                <div class="progress-actions">
+                                    <button class="tiny-button primary" type="button" data-status-action="start" data-url="{{ url_for('update_status', course_id=item['course_id']) }}">Start</button>
+                                    <button class="tiny-button" type="button" data-status-action="complete" data-url="{{ url_for('update_status', course_id=item['course_id']) }}">Complete</button>
+                                    <button class="tiny-button" type="button" data-status-action="reset" data-url="{{ url_for('update_status', course_id=item['course_id']) }}">Reset</button>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <h3>No enrollments yet</h3>
+                        <p>Once you join a course, it will show up here with your status and payment details.</p>
+                        <a class="cta-button" href="{{ url_for('course') }}">Browse courses</a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <aside class="dashboard-panel side-panel">
+                <div class="section-heading compact">
+                    <div>
+                        <p class="eyebrow">Recommended</p>
+                        <h2>Courses you may like next</h2>
+                    </div>
+                </div>
+                <div class="recommendation-list">
+                    {% for course in recommendations %}
+                        <article class="recommendation-card" data-card-url="{{ url_for('course_detail', course_id=course['course_id']) }}">
+                            <div class="course-card-top">
+                                <span class="course-icon small">{{ course["category_name"][:2]|upper }}</span>
+                                <span class="course-badge">Rs. {{ '%.2f'|format(course["price"]) }}</span>
+                            </div>
+                            <h3>{{ course["course_name"] }}</h3>
+                            <p>{{ course["description"] or "No description has been added yet." }}</p>
+                            <div class="course-meta">
+                                <span>{{ course["category_name"] }}</span>
+                                <span>{{ course["module_total"] }} modules</span>
+                            </div>
+                            <a class="cta-button compact" href="{{ url_for('course_detail', course_id=course['course_id']) }}">Open course</a>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                {% if user.can_manage_courses %}
+                    <div class="section-heading compact manager-heading">
+                        <div>
+                            <p class="eyebrow">Managed Courses</p>
+                            <h2>Your teaching space</h2>
+                        </div>
+                    </div>
+                    {% if managed_courses %}
+                        <div class="recommendation-list">
+                            {% for course in managed_courses %}
+                                <article class="recommendation-card" data-card-url="{{ url_for('course_detail', course_id=course['course_id']) }}">
+                                    <h3>{{ course["course_name"] }}</h3>
+                                    <div class="course-meta">
+                                        <span>{{ course["category_name"] }}</span>
+                                        <span>{{ course["module_total"] }} modules</span>
+                                        <span>{{ course["enrollment_total"] }} enrollments</span>
+                                    </div>
+                                    <a class="cta-button compact secondary" href="{{ url_for('course_detail', course_id=course['course_id']) }}">Manage</a>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state compact-empty">
+                            <h3>No managed courses yet</h3>
+                            <p>Create your first course to start building your teaching library.</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </aside>
         </div>
-      </section>
-
-      <section class="analytics-grid">
-        <article class="card chart-card">
-          <div class="card-head">
-            <h3>Analytics</h3>
-            <span>Daily Views</span>
-          </div>
-          <div class="line-chart" aria-label="Chart placeholder"></div>
-        </article>
-        <article class="card donut-card">
-          <h3>Events Distribution</h3>
-          <div class="donut-wrap">
-            <div class="donut"><span>300k</span></div>
-          </div>
-          <ul>
-            <li><span class="c1"></span>Likes</li>
-            <li><span class="c2"></span>Views</li>
-            <li><span class="c3"></span>Follows</li>
-          </ul>
-        </article>
-      </section>
-
-      <section class="bottom-targets">
-        <article class="card target">
-          <div>
-            <h3>Weekly Target</h3>
-            <p>25% achieved</p>
-          </div>
-          <div class="ring small">25%</div>
-        </article>
-        <article class="card target accent">
-          <div>
-            <h3>Monthly Target</h3>
-            <p>50% achieved</p>
-          </div>
-          <div class="ring">50%</div>
-        </article>
-      </section>
-    </main>
-
-    <aside class="profile-panel card">
-      <header>
-        <h2>Hi, Omid</h2>
-        <p>Good morning!</p>
-      </header>
-      <img class="hero" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=60" alt="Profile">
-      <h3>Omid Armin</h3>
-      <small>UI/UX Designer @Redwhale</small>
-      <div class="stats">
-        <div><strong>786K</strong><span>Followers</span></div>
-        <div><strong>298</strong><span>Following</span></div>
-        <div><strong>438</strong><span>Posts</span></div>
-      </div>
-      <div class="panel-actions">
-        <button type="button" class="primary">View Profile</button>
-        <button type="button">Edit Profile</button>
-      </div>
-      <div class="gallery">
-        <img src="https://images.unsplash.com/photo-1482192505345-5655af888cc4?auto=format&fit=crop&w=200&q=60" alt="gallery">
-        <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=200&q=60" alt="gallery">
-        <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=200&q=60" alt="gallery">
-        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=200&q=60" alt="gallery">
-        <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=200&q=60" alt="gallery">
-        <img src="https://images.unsplash.com/photo-1431440869543-efaf3388c585?auto=format&fit=crop&w=200&q=60" alt="gallery">
-      </div>
-    </aside>
-  </div>
-</body>
-</html>
+    </div>
+</section>
+{% endblock %}

@@ -1,96 +1,51 @@
-# Course Management System (Flask)
+# CMS Portal
 
-A Flask-based Course Management System with authentication, protected dashboard access, and modern frontend pages for learners.
+Flask-based course management system connected directly to the MySQL Workbench schema `mydb`.
 
-## Features
+## Database Tables Used
 
-- User registration with password hashing (`werkzeug.security`).
-- User login with session handling via `Flask-Login`.
-- Protected dashboard route (`/dashboard`) accessible only after login.
-- Logout flow that clears authenticated session.
-- Route-based navigation using `url_for(...)` in templates.
-- Responsive landing page sections (Explore, Courses, Hiring Partners, About).
-- Login/Register navigation for desktop and mobile menus.
+- `roles`
+- `users`
+- `categories`
+- `courses`
+- `enrollments`
+- `payments`
+- `course_content`
+- `reviews`
 
-## Tech Stack
+## What The App Supports
 
-- Python
-- Flask
-- Flask-Login
-- PyMySQL
-- MySQL
-- HTML/CSS (Jinja templates)
+- Student and Instructor registration using `roles` and `users`
+- Login using the `users` table
+- Course catalog from `courses` and `categories`
+- Course detail page with modules from `course_content`
+- Enrollment flow that creates rows in `enrollments` and `payments`
+- Review submission using `reviews`
+- Instructor course creation and module management
 
-## Project Structure
+## Config
 
-```text
-CMS/
-|- app.py
-|- config.py
-|- templates/
-|  |- index.html
-|  |- login.html
-|  |- register.html
-|  |- dashboard.html
-|  |- about.html
-|  `- course.html
-`- static/
-   |- index.css
-   |- login.css
-   |- dashboard.css
-   `- logo.png
-```
+Database settings stay in `config.py`.
 
-## Routes
+Default values:
 
-- `GET /` -> redirects to `/index`
-- `GET /index` -> home/landing page
-- `GET, POST /register` -> create account and auto-login on success
-- `GET, POST /login` -> authenticate existing user
-- `GET /dashboard` -> protected user dashboard (`@login_required`)
-- `GET /logout` -> logout and redirect to home
-- `GET /about` -> about page
-- `GET /course` -> course page
+- `DB_HOST=localhost`
+- `DB_PORT=3306`
+- `DB_USER=root`
+- `DB_PASSWORD=1234`
+- `DB_NAME=mydb`
 
-## Database Setup
+You can override them with environment variables if needed.
 
-Create a MySQL database named `cms` and a `users` table:
+## Run
 
-```sql
-CREATE DATABASE IF NOT EXISTS cms;
-USE cms;
-
-CREATE TABLE IF NOT EXISTS users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(100) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL
-);
-```
-
-## Configuration
-
-The app reads database and secret settings from `config.py`.
-
-Current keys used:
-
-- `SECRET_KEY`
-- `DB_HOST`
-- `DB_PORT`
-- `DB_USER`
-- `DB_PASSWORD`
-- `DB_NAME`
-
-Update `config.py` with your local MySQL credentials before running.
-
-## Installation and Run
-
-1. Create and activate a virtual environment.
-2. Install dependencies:
+1. Install dependencies:
 
 ```bash
-pip install flask flask-login pymysql werkzeug
+pip install -r requirements.txt
 ```
+
+2. Make sure MySQL Workbench / MySQL Server is running and the `mydb` schema exists.
 
 3. Start the app:
 
@@ -98,24 +53,4 @@ pip install flask flask-login pymysql werkzeug
 python app.py
 ```
 
-4. Open in browser:
-
-- `http://127.0.0.1:5000/`
-- `http://127.0.0.1:5000/register`
-- `http://127.0.0.1:5000/login`
-
-Important: run through Flask on port `5000`; opening templates with Live Server (`127.0.0.1:5500`) will not work for Flask routes/Jinja (`url_for`).
-
-## Authentication Flow
-
-1. New user registers at `/register`.
-2. Password is hashed and user is inserted into DB.
-3. User is logged in and redirected to `/dashboard`.
-4. Returning user logs in at `/login`.
-5. Protected routes require authentication (`Flask-Login`).
-
-## Notes
-
-- Duplicate email registration is blocked.
-- On failed login, user remains on login page.
-- Session-based user state is handled by `Flask-Login` plus current user loading from DB.
+4. Open `http://127.0.0.1:5000/`

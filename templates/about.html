@@ -1,3 +1,50 @@
-<h1> About Page</h1>
-<p>This is the about page.</p>
-<a href="{{ url_for('index') }}">Home</a>
+{% extends "base.html" %}
+
+{% block title %}About | CMS Portal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container about-stack">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">About The Platform</p>
+                <h1>Built to make learning and teaching feel organized.</h1>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <article class="feature-card">
+                <h3>Made for both learners and instructors</h3>
+                <p>Students can explore, enroll, and review courses, while instructors get a clean space to build and manage learning content.</p>
+            </article>
+            <article class="feature-card">
+                <h3>Course pages with real context</h3>
+                <p>Each course brings together its overview, lesson modules, pricing, and learner feedback so users can decide with confidence.</p>
+            </article>
+            <article class="feature-card">
+                <h3>Progress you can come back to</h3>
+                <p>The dashboard helps learners pick up where they left off and gives instructors a quick view of the courses they manage.</p>
+            </article>
+        </div>
+
+        <div class="panel-card stats-band">
+            <div>
+                <strong>{{ platform_stats.course_total }}</strong>
+                <span>courses available</span>
+            </div>
+            <div>
+                <strong>{{ platform_stats.enrollment_total }}</strong>
+                <span>enrollments tracked</span>
+            </div>
+            <div>
+                <strong>{{ platform_stats.instructor_total }}</strong>
+                <span>instructors active</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

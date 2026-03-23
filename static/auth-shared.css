@@ -1,0 +1,119 @@
+.auth-section {
+    padding: 1rem 0 2rem;
+}
+
+.auth-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.auth-copy,
+.auth-card {
+    padding: 2rem;
+    border-radius: 30px;
+    border: 1px solid rgba(31, 41, 51, 0.08);
+    box-shadow: 0 24px 60px rgba(86, 61, 44, 0.12);
+}
+
+.auth-copy {
+    background:
+        radial-gradient(circle at top right, rgba(31, 111, 100, 0.16), transparent 13rem),
+        rgba(255, 255, 255, 0.76);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-copy h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 4vw, 3.6rem);
+    line-height: 1.05;
+}
+
+.auth-copy p {
+    color: var(--slate);
+    line-height: 1.7;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.auth-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.auth-form label {
+    font-weight: 700;
+}
+
+.auth-form input,
+.auth-form select,
+.auth-form textarea {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(31, 41, 51, 0.12);
+    background: rgba(255, 255, 255, 0.82);
+    resize: vertical;
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 5rem;
+}
+
+.password-field button {
+    position: absolute;
+    top: 50%;
+    right: 0.7rem;
+    transform: translateY(-50%);
+    border: 0;
+    background: rgba(31, 41, 51, 0.08);
+    color: var(--ink);
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.form-submit {
+    margin-top: 0.5rem;
+    padding: 1rem 1.2rem;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--pine), #3b9588);
+    color: var(--white);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 16px 32px rgba(31, 111, 100, 0.22);
+}
+
+.auth-switch {
+    margin: 1rem 0 0;
+    color: var(--slate);
+}
+
+.auth-switch a {
+    color: var(--coral);
+    font-weight: 700;
+}
+
+@media (max-width: 860px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 580px) {
+    .auth-copy,
+    .auth-card {
+        padding: 1.3rem;
+        border-radius: 24px;
+    }
+}
