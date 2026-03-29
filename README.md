@@ -27,35 +27,10 @@ Flask-based course management system connected directly to the MySQL Workbench s
 - Admin dashboard with student, instructor, course, and enrollment insights
 - Admin tools to add categories, edit courses/modules, and delete reviews
 
-## Config
 
-Database settings stay in `config.py`.
 
-Default values:
 
-- `DB_HOST=localhost`
-- `DB_PORT=3306`
-- `DB_USER=root`
-- `DB_PASSWORD=1234`
-- `DB_NAME=mydb`
-- `ADMIN_USERNAME=admin`
-- `ADMIN_EMAIL=admin@cms.demo`
-- `ADMIN_PASSWORD=admin123`
 
-You can override them with environment variables if needed.
-
-## Database Setup
-
-MySQL Workbench itself does not need any special app-specific plugin. The important part is that your MySQL Server connection, schema, and tables match what the Flask app expects.
-
-1. Start your local MySQL Server.
-2. Open MySQL Workbench and connect to the same server used by the app:
-   - Host: `localhost`
-   - Port: `3306`
-   - Username: `root`
-   - Password: `1234`
-3. Open [`schema.sql`](schema.sql) in Workbench and run it.
-4. If your server uses different credentials or a different schema name, update `config.py` or set environment variables before starting the app.
 
 ## Run
 
