@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | CMS Portal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='admin_dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container admin-stack">
+        <div class="admin-header">
+            <div>
+                <p class="eyebrow">Admin Dashboard</p>
+                <h1>{{ user.username }}, here is the platform overview.</h1>
+                <p>Review students, instructors, enrollments, and the courses people choose most, all in one place.</p>
+                <p class="admin-note">Recorded paid revenue: Rs. {{ '%.2f'|format(stats.revenue_total) }}</p>
+            </div>
+            <div class="admin-header-actions">
+                <a class="cta-button secondary" href="#categories">Add Category</a>
+                <a class="cta-button secondary" href="{{ url_for('course') }}">Browse Courses</a>
+                <a class="cta-button" href="{{ url_for('create_course') }}">Create Course</a>
+            </div>
+        </div>
+
+        <div class="admin-metrics">
+            <article class="admin-card stat-card">
+                <span>Students</span>
+                <strong>{{ stats.student_total }}</strong>
+            </article>
+            <article class="admin-card stat-card warm">
+                <span>Instructors</span>
+                <strong>{{ stats.instructor_total }}</strong>
+            </article>
+            <article class="admin-card stat-card cool">
+                <span>Courses</span>
+                <strong>{{ stats.course_total }}</strong>
+            </article>
+            <article class="admin-card stat-card muted">
+                <span>Total enrollments</span>
+                <strong>{{ stats.enrollment_total }}</strong>
+            </article>
+        </div>
+
+        <div class="admin-layout">
+            <div class="admin-panels">
+                <section class="admin-panel">
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">Students</p>
+                            <h2>Student details</h2>
+                        </div>
+                    </div>
+                    {% if students %}
+                        <div class="table-scroll">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Email</th>
+                                        <th>Enrolled</th>
+                                        <th>Completed</th>
+                                        <th>Last activity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in students %}
+                                        <tr>
+                                            <td>{{ item["username"] }}</td>
+                                            <td>{{ item["email"] }}</td>
+                                            <td>{{ item["enrolled_total"] }}</td>
+                                            <td>{{ item["completed_total"] }}</td>
+                                            <td>{{ item["last_enrollment_date"].strftime('%d %b %Y') if item["last_enrollment_date"] else 'No enrollments yet' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="empty-copy">No student records are available yet.</p>
+                    {% endif %}
+                </section>
+
+                <section class="admin-panel">
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">Instructors</p>
+                            <h2>Instructor details</h2>
+                        </div>
+                    </div>
+                    {% if instructors %}
+                        <div class="table-scroll">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Instructor</th>
+                                        <th>Email</th>
+                                        <th>Courses</th>
+                                        <th>Enrollments</th>
+                                        <th>Avg rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in instructors %}
+                                        <tr>
+                                            <td>{{ item["username"] }}</td>
+                                            <td>{{ item["email"] }}</td>
+                                            <td>{{ item["course_total"] }}</td>
+                                            <td>{{ item["enrollment_total"] }}</td>
+                                            <td>{{ '%.1f'|format(item["avg_rating"] or 0) }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="empty-copy">No instructor records are available yet.</p>
+                    {% endif %}
+                </section>
+            </div>
+
+            <aside class="admin-sidebar">
+                <section class="admin-panel section-anchor" id="categories">
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">Categories</p>
+                            <h2>Add a new category</h2>
+                        </div>
+                    </div>
+                    <form method="POST" action="{{ url_for('create_category') }}" class="admin-form">
+                        <label for="category_name">Category name</label>
+                        <input type="text" id="category_name" name="category_name" placeholder="Programming Basics" required>
+                        <button class="cta-button compact" type="submit">Add Category</button>
+                    </form>
+                    {% if categories %}
+                        <div class="category-pill-list">
+                            {% for category in categories %}
+                                <span class="category-pill">{{ category["category_name"] }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </section>
+
+                <section class="admin-panel">
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">Top Chosen Courses</p>
+                            <h2>Most enrolled courses</h2>
+                        </div>
+                    </div>
+                    {% if top_courses %}
+                        <div class="ranking-list">
+                            {% for item in top_courses %}
+                                <article class="ranking-card">
+                                    <div class="ranking-head">
+                                        <h3>{{ item["course_name"] }}</h3>
+                                        <span>{{ item["enrollment_total"] }} enrollments</span>
+                                    </div>
+                                    <p>{{ item["category_name"] }} &middot; {{ item["instructor_name"] }}</p>
+                                    <div class="ranking-meta">
+                                        <span>Avg rating {{ '%.1f'|format(item["avg_rating"] or 0) }}</span>
+                                        <a class="text-link" href="{{ url_for('course_detail', course_id=item['course_id']) }}">Open course</a>
+                                        <a class="text-link" href="{{ url_for('course_detail', course_id=item['course_id'], _anchor='course-settings') }}">Edit course</a>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="empty-copy">Courses will appear here once enrollments begin.</p>
+                    {% endif %}
+                </section>
+
+                <section class="admin-panel">
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">Favorite Instructors</p>
+                            <h2>Most chosen instructors</h2>
+                        </div>
+                    </div>
+                    {% if favorite_instructors %}
+                        <div class="ranking-list">
+                            {% for item in favorite_instructors %}
+                                <article class="ranking-card">
+                                    <div class="ranking-head">
+                                        <h3>{{ item["username"] }}</h3>
+                                        <span>{{ item["enrollment_total"] }} enrollments</span>
+                                    </div>
+                                    <p>{{ item["email"] }}</p>
+                                    <div class="ranking-meta">
+                                        <span>{{ item["course_total"] }} course{{ '' if item["course_total"] == 1 else 's' }}</span>
+                                        <span>Avg rating {{ '%.1f'|format(item["avg_rating"] or 0) }}</span>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="empty-copy">Instructor engagement will appear here after course activity grows.</p>
+                    {% endif %}
+                </section>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}

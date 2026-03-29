@@ -1,9 +1,67 @@
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const mobileNav = document.querySelector("[data-mobile-nav]");
+const themeToggle = document.querySelector("[data-theme-toggle]");
+const themeLabel = document.querySelector("[data-theme-label]");
+const rootElement = document.documentElement;
 
 if (menuToggle && mobileNav) {
     menuToggle.addEventListener("click", () => {
-        mobileNav.classList.toggle("is-open");
+        const isOpen = mobileNav.classList.toggle("is-open");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    mobileNav.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+            mobileNav.classList.remove("is-open");
+            menuToggle.setAttribute("aria-expanded", "false");
+        });
+    });
+
+    const desktopMenuMedia = window.matchMedia("(min-width: 1041px)");
+    const resetMenuState = (event) => {
+        if (event.matches) {
+            mobileNav.classList.remove("is-open");
+            menuToggle.setAttribute("aria-expanded", "false");
+        }
+    };
+
+    if (typeof desktopMenuMedia.addEventListener === "function") {
+        desktopMenuMedia.addEventListener("change", resetMenuState);
+    } else if (typeof desktopMenuMedia.addListener === "function") {
+        desktopMenuMedia.addListener(resetMenuState);
+    }
+}
+
+function getActiveTheme() {
+    return rootElement.dataset.theme === "dark" ? "dark" : "light";
+}
+
+function syncThemeControl() {
+    const isDarkTheme = getActiveTheme() === "dark";
+
+    if (themeToggle) {
+        themeToggle.checked = isDarkTheme;
+    }
+
+    if (themeLabel) {
+        themeLabel.textContent = isDarkTheme ? "Dark mode" : "Light mode";
+    }
+}
+
+if (themeToggle) {
+    syncThemeControl();
+
+    themeToggle.addEventListener("change", () => {
+        const nextTheme = themeToggle.checked ? "dark" : "light";
+        rootElement.dataset.theme = nextTheme;
+
+        try {
+            localStorage.setItem("theme-preference", nextTheme);
+        } catch (error) {
+            console.warn("Theme preference could not be saved.", error);
+        }
+
+        syncThemeControl();
     });
 }
 
@@ -58,12 +116,13 @@ function filterCourses() {
     }
 
     const searchValue = (searchInput?.value || "").trim().toLowerCase();
-    const categoryValue = categoryFilter?.value || "";
+    const categoryValue = (categoryFilter?.value || "").trim().toLowerCase();
 
     let visibleItems = 0;
 
     courseItems.forEach((item) => {
-        const matchesSearch = item.dataset.title.includes(searchValue);
+        const searchContent = item.dataset.search || item.dataset.title || "";
+        const matchesSearch = searchContent.includes(searchValue);
         const matchesCategory = !categoryValue || item.dataset.category === categoryValue;
         const shouldShow = matchesSearch && matchesCategory;
 

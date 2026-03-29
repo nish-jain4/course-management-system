@@ -1,0 +1,232 @@
+.admin-section {
+    padding: 0.5rem 0 2rem;
+}
+
+.admin-stack,
+.admin-panels,
+.ranking-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.admin-header h1 {
+    margin: 0;
+}
+
+.admin-header p {
+    color: var(--slate);
+    line-height: 1.65;
+}
+
+.admin-note {
+    margin-bottom: 0;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.admin-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.admin-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.admin-card,
+.admin-panel,
+.ranking-card {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(31, 41, 51, 0.08);
+    box-shadow: var(--shadow);
+    border-radius: 28px;
+}
+
+.stat-card {
+    padding: 1.35rem;
+}
+
+.stat-card span {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--slate);
+}
+
+.stat-card strong {
+    font-size: 2rem;
+}
+
+.stat-card.warm {
+    background: linear-gradient(135deg, rgba(255, 214, 184, 0.95), rgba(255, 255, 255, 0.86));
+}
+
+.stat-card.cool {
+    background: linear-gradient(135deg, rgba(213, 236, 230, 0.95), rgba(255, 255, 255, 0.86));
+}
+
+.stat-card.muted {
+    background: linear-gradient(135deg, rgba(244, 238, 227, 0.95), rgba(255, 255, 255, 0.86));
+}
+
+.admin-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 1rem;
+}
+
+.admin-panel {
+    padding: 1.35rem;
+}
+
+.section-anchor {
+    scroll-margin-top: 7rem;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.admin-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.admin-form label {
+    font-weight: 700;
+}
+
+.admin-form input {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(31, 41, 51, 0.12);
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.admin-table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 0.9rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(31, 41, 51, 0.08);
+}
+
+.admin-table thead th {
+    color: var(--slate);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-sidebar {
+    display: grid;
+    gap: 1rem;
+}
+
+.category-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.category-pill {
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(31, 41, 51, 0.06);
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.ranking-card {
+    padding: 1rem;
+}
+
+.ranking-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.ranking-head h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.ranking-head span,
+.ranking-meta span {
+    color: var(--slate);
+}
+
+.ranking-card p {
+    margin: 0.45rem 0 0.8rem;
+    color: var(--slate);
+}
+
+.ranking-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    align-items: center;
+}
+
+.empty-copy {
+    margin: 0;
+    color: var(--slate);
+}
+
+@media (max-width: 1080px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 860px) {
+    .admin-metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-header,
+    .admin-metrics {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .admin-header {
+        align-items: start;
+    }
+
+    .admin-header-actions .cta-button {
+        width: 100%;
+    }
+
+    .admin-table {
+        min-width: 520px;
+    }
+
+    .ranking-head {
+        flex-direction: column;
+    }
+}

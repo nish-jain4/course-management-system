@@ -8,3 +8,6 @@ class Config:
     DB_USER = os.environ.get("DB_USER", "root")
     DB_PASSWORD = os.environ.get("DB_PASSWORD", "1234")
     DB_NAME = os.environ.get("DB_NAME", "mydb")
+    ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+    ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@cms.demo")
+    ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")

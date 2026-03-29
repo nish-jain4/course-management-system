@@ -37,38 +37,240 @@ STATUS_ACTIONS = {
 
 PAYMENT_METHODS = ["Card", "UPI", "Net Banking", "Cash"]
 
-SAMPLE_COURSES = [
+COURSE_ACCENTS = {
+    "Programming": "#1f6f64",
+    "Design": "#d96c4b",
+    "Analytics": "#355c7d",
+    "Marketing": "#c26a3d",
+    "Business": "#6b7f3f",
+}
+
+ROLE_SEEDS = [
+    (1, "Student"),
+    (2, "Instructor"),
+    (3, "Admin"),
+]
+
+CATEGORY_SEEDS = [
+    (1, "Programming"),
+    (2, "Design"),
+    (3, "Analytics"),
+    (4, "Marketing"),
+    (5, "Business"),
+]
+
+DEMO_USERS = [
+    {"username": "Ananya Rao", "email": "ananya.rao@cms.demo", "role_name": "Instructor"},
+    {"username": "Riya Mehta", "email": "riya.mehta@cms.demo", "role_name": "Instructor"},
+    {"username": "Karan Shah", "email": "karan.shah@cms.demo", "role_name": "Instructor"},
+    {"username": "Meera Joshi", "email": "meera.joshi@cms.demo", "role_name": "Instructor"},
+    {"username": "Arjun Kapoor", "email": "arjun.kapoor@cms.demo", "role_name": "Instructor"},
+    {"username": "Aditi Sen", "email": "aditi.sen@cms.demo", "role_name": "Student"},
+    {"username": "Rahul Nair", "email": "rahul.nair@cms.demo", "role_name": "Student"},
+    {"username": "Sneha Iyer", "email": "sneha.iyer@cms.demo", "role_name": "Student"},
+    {"username": "Vikram Patel", "email": "vikram.patel@cms.demo", "role_name": "Student"},
+]
+
+DEMO_COURSES = [
     {
         "course_name": "Python for Busy Beginners",
         "description": "Learn the basics with short lessons, small wins, and projects you can finish after work or class.",
-        "price": 999.00,
+        "price": Decimal("999.00"),
         "category_name": "Programming",
-        "module_total": 12,
-        "review_total": 86,
-        "instructor_name": "Ananya Rao",
         "accent": "#1f6f64",
+        "instructor_email": "ananya.rao@cms.demo",
+        "modules": [
+            "Set up Python without the usual confusion",
+            "Use variables, loops, and conditions in small tasks",
+            "Read and clean user input with confidence",
+            "Finish a mini tracker project from scratch",
+        ],
+        "reviews": [
+            {
+                "user_email": "aditi.sen@cms.demo",
+                "rating": Decimal("4.8"),
+                "comment": "Short lessons and practical examples made it easy to keep going after work.",
+                "status": "Completed",
+                "payment_method": "UPI",
+            },
+            {
+                "user_email": "rahul.nair@cms.demo",
+                "rating": Decimal("4.6"),
+                "comment": "A friendly beginner course with enough practice to feel real.",
+                "status": "In Progress",
+                "payment_method": "Card",
+            },
+        ],
     },
     {
         "course_name": "Design Better Presentations",
         "description": "Turn rough slides into clear, confident decks that feel polished and easy to follow.",
-        "price": 749.00,
+        "price": Decimal("749.00"),
         "category_name": "Design",
-        "module_total": 8,
-        "review_total": 41,
-        "instructor_name": "Riya Mehta",
         "accent": "#d96c4b",
+        "instructor_email": "riya.mehta@cms.demo",
+        "modules": [
+            "Choose layouts that guide attention",
+            "Write shorter slide copy that lands faster",
+            "Use color and contrast without clutter",
+            "Turn a messy deck into a client-ready story",
+        ],
+        "reviews": [
+            {
+                "user_email": "sneha.iyer@cms.demo",
+                "rating": Decimal("4.7"),
+                "comment": "The before-and-after examples were strong and easy to apply immediately.",
+                "status": "Completed",
+                "payment_method": "Net Banking",
+            },
+            {
+                "user_email": "vikram.patel@cms.demo",
+                "rating": Decimal("4.5"),
+                "comment": "It helped me simplify my slides instead of decorating them.",
+                "status": "Completed",
+                "payment_method": "UPI",
+            },
+        ],
     },
     {
         "course_name": "Data Skills for Everyday Work",
         "description": "Build confidence with spreadsheets, reports, and dashboards you can actually use on the job.",
-        "price": 1199.00,
+        "price": Decimal("1199.00"),
         "category_name": "Analytics",
-        "module_total": 10,
-        "review_total": 64,
-        "instructor_name": "Karan Shah",
         "accent": "#355c7d",
+        "instructor_email": "karan.shah@cms.demo",
+        "modules": [
+            "Clean messy data without overthinking it",
+            "Build formulas that save weekly effort",
+            "Create charts that explain the story quickly",
+            "Package a dashboard for team updates",
+        ],
+        "reviews": [
+            {
+                "user_email": "aditi.sen@cms.demo",
+                "rating": Decimal("4.9"),
+                "comment": "Exactly the kind of practical analytics course I wanted for office reporting.",
+                "status": "Completed",
+                "payment_method": "Card",
+            },
+            {
+                "user_email": "rahul.nair@cms.demo",
+                "rating": Decimal("4.7"),
+                "comment": "The dashboard section was especially helpful for daily work.",
+                "status": "In Progress",
+                "payment_method": "Cash",
+            },
+        ],
+    },
+    {
+        "course_name": "Social Media Strategy Sprint",
+        "description": "Plan sharper campaigns, write stronger hooks, and map content that supports clear business goals.",
+        "price": Decimal("899.00"),
+        "category_name": "Marketing",
+        "accent": "#c26a3d",
+        "instructor_email": "meera.joshi@cms.demo",
+        "modules": [
+            "Find content themes your audience will care about",
+            "Build a one-month posting plan that stays realistic",
+            "Write hooks, captions, and calls to action",
+            "Measure what is working and adjust fast",
+        ],
+        "reviews": [
+            {
+                "user_email": "sneha.iyer@cms.demo",
+                "rating": Decimal("4.6"),
+                "comment": "Clear framework, useful examples, and no fluff.",
+                "status": "Completed",
+                "payment_method": "UPI",
+            },
+            {
+                "user_email": "vikram.patel@cms.demo",
+                "rating": Decimal("4.4"),
+                "comment": "The campaign planning templates made my workflow much cleaner.",
+                "status": "In Progress",
+                "payment_method": "Card",
+            },
+        ],
+    },
+    {
+        "course_name": "Project Coordination Without Chaos",
+        "description": "Run smoother timelines, clearer handoffs, and calmer weekly updates for cross-functional work.",
+        "price": Decimal("1099.00"),
+        "category_name": "Business",
+        "accent": "#6b7f3f",
+        "instructor_email": "arjun.kapoor@cms.demo",
+        "modules": [
+            "Break work into milestones people can follow",
+            "Run updates that surface blockers early",
+            "Keep stakeholders aligned without long meetings",
+            "Create simple systems for follow-through",
+        ],
+        "reviews": [
+            {
+                "user_email": "aditi.sen@cms.demo",
+                "rating": Decimal("4.8"),
+                "comment": "This course made project updates feel much less stressful.",
+                "status": "Completed",
+                "payment_method": "Net Banking",
+            },
+            {
+                "user_email": "rahul.nair@cms.demo",
+                "rating": Decimal("4.5"),
+                "comment": "Helpful for organizing team work without adding more process than needed.",
+                "status": "Completed",
+                "payment_method": "UPI",
+            },
+        ],
+    },
+    {
+        "course_name": "Frontend Foundations with Flask Templates",
+        "description": "Build cleaner page structure, reusable components, and practical UI polish using HTML, CSS, and Flask templates.",
+        "price": Decimal("1299.00"),
+        "category_name": "Programming",
+        "accent": "#1f6f64",
+        "instructor_email": "ananya.rao@cms.demo",
+        "modules": [
+            "Structure a template layout that scales",
+            "Use CSS variables for a consistent visual system",
+            "Make cards, forms, and grids feel deliberate",
+            "Connect template actions back to Flask routes",
+        ],
+        "reviews": [
+            {
+                "user_email": "sneha.iyer@cms.demo",
+                "rating": Decimal("4.9"),
+                "comment": "Loved how practical this felt for small Flask projects.",
+                "status": "In Progress",
+                "payment_method": "Card",
+            },
+            {
+                "user_email": "vikram.patel@cms.demo",
+                "rating": Decimal("4.7"),
+                "comment": "It helped me understand how templates and UI pieces connect together.",
+                "status": "Completed",
+                "payment_method": "UPI",
+            },
+        ],
     },
 ]
+
+SAMPLE_COURSES = [
+    {
+        "course_name": course["course_name"],
+        "description": course["description"],
+        "price": float(course["price"]),
+        "category_name": course["category_name"],
+        "module_total": len(course["modules"]),
+        "review_total": len(course["reviews"]),
+        "instructor_name": next(
+            user["username"] for user in DEMO_USERS if user["email"] == course["instructor_email"]
+        ),
+        "accent": course["accent"],
+    }
+    for course in DEMO_COURSES[:3]
+]
+
+CATALOG_BOOTSTRAPPED = False
 
 
 class User(UserMixin):
@@ -106,6 +308,228 @@ def get_db_connection():
     )
 
 
+def fit_text(value: str | None, max_length: int) -> str | None:
+    if value is None or len(value) <= max_length:
+        return value
+    return f"{value[: max_length - 3].rstrip()}..."
+
+
+def ensure_catalog_seeded():
+    global CATALOG_BOOTSTRAPPED
+
+    if CATALOG_BOOTSTRAPPED:
+        return
+
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            for role_id, role_name in ROLE_SEEDS:
+                cursor.execute(
+                    "SELECT role_id FROM roles WHERE role_name = %s LIMIT 1",
+                    (role_name,),
+                )
+                if cursor.fetchone() is None:
+                    cursor.execute(
+                        "INSERT INTO roles (role_id, role_name) VALUES (%s, %s)",
+                        (role_id, fit_text(role_name, 45)),
+                    )
+
+            role_map: dict[str, int] = {}
+            cursor.execute("SELECT role_id, role_name FROM roles")
+            for row in cursor.fetchall():
+                role_map[row["role_name"]] = row["role_id"]
+
+            admin_username = fit_text(app.config["ADMIN_USERNAME"].strip() or "admin", 50)
+            admin_email = app.config["ADMIN_EMAIL"].strip().lower() or "admin@cms.demo"
+            admin_password = app.config["ADMIN_PASSWORD"] or "admin123"
+
+            cursor.execute(
+                """
+                SELECT
+                    u.user_id,
+                    u.username,
+                    u.email,
+                    u.password
+                FROM users u
+                LEFT JOIN roles r ON r.role_id = u.role_id
+                WHERE (
+                    LOWER(u.username) = LOWER(%s)
+                    OR LOWER(u.email) = LOWER(%s)
+                )
+                  AND COALESCE(r.role_name, 'Student') = 'Admin'
+                LIMIT 1
+                """,
+                (admin_username, admin_email),
+            )
+            existing_admin = cursor.fetchone()
+            if existing_admin is None:
+                cursor.execute(
+                    """
+                    INSERT INTO users (username, email, password, role_id, created_at)
+                    VALUES (%s, %s, %s, %s, NOW())
+                    """,
+                    (
+                        admin_username,
+                        admin_email,
+                        generate_password_hash(admin_password),
+                        role_map["Admin"],
+                    ),
+                )
+            else:
+                update_fields: list[str] = []
+                update_params: list[Any] = []
+
+                if existing_admin["username"] != admin_username:
+                    update_fields.append("username = %s")
+                    update_params.append(admin_username)
+                if (existing_admin["email"] or "").lower() != admin_email:
+                    update_fields.append("email = %s")
+                    update_params.append(admin_email)
+                if not password_matches(existing_admin["password"], admin_password):
+                    update_fields.append("password = %s")
+                    update_params.append(generate_password_hash(admin_password))
+
+                if update_fields:
+                    cursor.execute(
+                        f"UPDATE users SET {', '.join(update_fields)} WHERE user_id = %s",
+                        (*update_params, existing_admin["user_id"]),
+                    )
+
+            for category_id, category_name in CATEGORY_SEEDS:
+                cursor.execute(
+                    "SELECT category_id FROM categories WHERE category_name = %s LIMIT 1",
+                    (category_name,),
+                )
+                if cursor.fetchone() is None:
+                    cursor.execute(
+                        "INSERT INTO categories (category_id, category_name) VALUES (%s, %s)",
+                        (category_id, fit_text(category_name, 45)),
+                    )
+
+            cursor.execute("SELECT COUNT(*) AS total FROM courses")
+            if cursor.fetchone()["total"] > 0:
+                connection.commit()
+                CATALOG_BOOTSTRAPPED = True
+                return
+
+            category_map: dict[str, int] = {}
+            cursor.execute("SELECT category_id, category_name FROM categories")
+            for row in cursor.fetchall():
+                category_map[row["category_name"]] = row["category_id"]
+
+            user_map: dict[str, int] = {}
+            for demo_user in DEMO_USERS:
+                cursor.execute(
+                    "SELECT user_id FROM users WHERE email = %s LIMIT 1",
+                    (demo_user["email"],),
+                )
+                existing_user = cursor.fetchone()
+                if existing_user:
+                    user_map[demo_user["email"]] = existing_user["user_id"]
+                    continue
+
+                cursor.execute(
+                    """
+                    INSERT INTO users (username, email, password, role_id, created_at)
+                    VALUES (%s, %s, %s, %s, NOW())
+                    """,
+                    (
+                        fit_text(demo_user["username"], 50),
+                        demo_user["email"],
+                        generate_password_hash("catalog-demo-access"),
+                        role_map[demo_user["role_name"]],
+                    ),
+                )
+                user_map[demo_user["email"]] = cursor.lastrowid
+
+            for course in DEMO_COURSES:
+                cursor.execute(
+                    """
+                    INSERT INTO courses (
+                        course_name,
+                        description,
+                        price,
+                        category_id,
+                        instructor_id,
+                        created_at
+                    ) VALUES (%s, %s, %s, %s, %s, NOW())
+                    """,
+                    (
+                        fit_text(course["course_name"], 200),
+                        fit_text(course["description"], 400),
+                        course["price"],
+                        category_map[course["category_name"]],
+                        user_map[course["instructor_email"]],
+                    ),
+                )
+                course_id = cursor.lastrowid
+
+                for module_number, module_title in enumerate(course["modules"], start=1):
+                    cursor.execute(
+                        """
+                        INSERT INTO course_content (title, video_url, module_number, course_id)
+                        VALUES (%s, %s, %s, %s)
+                        """,
+                        (
+                            fit_text(module_title, 45),
+                            f"https://example.com/courses/{course_id}/module-{module_number}",
+                            module_number,
+                            course_id,
+                        ),
+                    )
+
+                for review in course["reviews"]:
+                    reviewer_id = user_map[review["user_email"]]
+
+                    cursor.execute(
+                        """
+                        INSERT INTO enrollments (enrollment_date, status, user_id, course_id)
+                        VALUES (NOW(), %s, %s, %s)
+                        """,
+                        (review["status"], reviewer_id, course_id),
+                    )
+                    enrollment_id = cursor.lastrowid
+
+                    cursor.execute(
+                        """
+                        INSERT INTO payments (
+                            amount,
+                            payment_method,
+                            payment_status,
+                            payment_date,
+                            enrollment_id
+                        ) VALUES (%s, %s, %s, NOW(), %s)
+                        """,
+                        (
+                            course["price"],
+                            fit_text(review["payment_method"], 45),
+                            fit_text("Paid", 45),
+                            enrollment_id,
+                        ),
+                    )
+
+                    cursor.execute(
+                        """
+                        INSERT INTO reviews (user_id, course_id, rating, comment, review_date)
+                        VALUES (%s, %s, %s, %s, NOW())
+                        """,
+                        (
+                            reviewer_id,
+                            course_id,
+                            review["rating"],
+                            review["comment"],
+                        ),
+                    )
+
+            connection.commit()
+            CATALOG_BOOTSTRAPPED = True
+    except Exception:
+        connection.rollback()
+        raise
+    finally:
+        connection.close()
+
+
 def password_matches(stored_password: str | None, provided_password: str) -> bool:
     if not stored_password:
         return False
@@ -115,6 +539,7 @@ def password_matches(stored_password: str | None, provided_password: str) -> boo
 
 
 def get_user_by_id(user_id: int | str):
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -139,6 +564,7 @@ def get_user_by_id(user_id: int | str):
 
 
 def get_user_by_email(email: str):
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -162,7 +588,50 @@ def get_user_by_email(email: str):
         connection.close()
 
 
+def get_user_by_username(username: str, role_name: str | None = None):
+    ensure_catalog_seeded()
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = """
+                SELECT
+                    u.user_id,
+                    u.username,
+                    u.email,
+                    u.password,
+                    u.role_id,
+                    COALESCE(r.role_name, 'Student') AS role_name
+                FROM users u
+                LEFT JOIN roles r ON r.role_id = u.role_id
+                WHERE LOWER(u.username) = LOWER(%s)
+            """
+            params: list[Any] = [username]
+            if role_name:
+                query += " AND COALESCE(r.role_name, 'Student') = %s"
+                params.append(role_name)
+            cursor.execute(query, tuple(params))
+            return cursor.fetchone()
+    finally:
+        connection.close()
+
+
+def get_role_id_by_name(role_name: str) -> int | None:
+    ensure_catalog_seeded()
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT role_id FROM roles WHERE role_name = %s LIMIT 1",
+                (role_name,),
+            )
+            row = cursor.fetchone()
+            return row["role_id"] if row else None
+    finally:
+        connection.close()
+
+
 def get_registration_roles():
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -180,6 +649,7 @@ def get_registration_roles():
 
 
 def get_categories():
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -196,6 +666,7 @@ def get_categories():
 
 
 def get_course_count() -> int:
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -207,6 +678,7 @@ def get_course_count() -> int:
 
 
 def get_platform_stats() -> dict[str, Any]:
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -253,6 +725,7 @@ def get_platform_stats() -> dict[str, Any]:
 
 
 def get_featured_courses(limit: int = 3):
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -298,6 +771,7 @@ def get_featured_courses(limit: int = 3):
 
 
 def get_catalog_courses(user_id: int | None):
+    ensure_catalog_seeded()
     viewer_id = user_id if user_id is not None else -1
     connection = get_db_connection()
     try:
@@ -348,6 +822,7 @@ def get_catalog_courses(user_id: int | None):
 
 
 def get_course_detail(course_id: int, user_id: int | None):
+    ensure_catalog_seeded()
     viewer_id = user_id if user_id is not None else -1
     connection = get_db_connection()
     try:
@@ -360,6 +835,7 @@ def get_course_detail(course_id: int, user_id: int | None):
                     c.description,
                     c.price,
                     c.created_at,
+                    c.category_id,
                     c.instructor_id,
                     COALESCE(cat.category_name, 'Uncategorized') AS category_name,
                     COALESCE(instructor.username, 'TBA') AS instructor_name,
@@ -438,7 +914,7 @@ def get_course_detail(course_id: int, user_id: int | None):
                     p.payment_status,
                     p.payment_date
                 FROM enrollments e
-                LEFT JOIN payments p ON p.enrollment_id = e.enrollment_id
+                LEFT JOIN vw_latest_payment p ON p.enrollment_id = e.enrollment_id
                 WHERE e.user_id = %s AND e.course_id = %s
                 ORDER BY p.payment_id DESC
                 LIMIT 1
@@ -469,7 +945,52 @@ def get_course_detail(course_id: int, user_id: int | None):
     }
 
 
+def get_course_content_item(course_id: int, content_id: int):
+    ensure_catalog_seeded()
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT content_id, title, video_url, module_number, course_id
+                FROM course_content
+                WHERE course_id = %s AND content_id = %s
+                LIMIT 1
+                """,
+                (course_id, content_id),
+            )
+            return cursor.fetchone()
+    finally:
+        connection.close()
+
+
+def is_user_enrolled_in_course(course_id: int, user_id: int | str) -> bool:
+    ensure_catalog_seeded()
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT enrollment_id
+                FROM enrollments
+                WHERE user_id = %s AND course_id = %s
+                LIMIT 1
+                """,
+                (user_id, course_id),
+            )
+            return cursor.fetchone() is not None
+    finally:
+        connection.close()
+
+
+def can_open_course_modules(course_id: int, user: User) -> bool:
+    if user.can_manage_courses and can_manage_course(course_id, user):
+        return True
+    return is_user_enrolled_in_course(course_id, user.id)
+
+
 def get_dashboard_snapshot(user: User):
+    ensure_catalog_seeded()
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -499,21 +1020,7 @@ def get_dashboard_snapshot(user: User):
                     FROM course_content
                     GROUP BY course_id
                 ) module_stats ON module_stats.course_id = c.Course_id
-                LEFT JOIN (
-                    SELECT
-                        p1.payment_id,
-                        p1.enrollment_id,
-                        p1.amount,
-                        p1.payment_method,
-                        p1.payment_status,
-                        p1.payment_date
-                    FROM payments p1
-                    INNER JOIN (
-                        SELECT enrollment_id, MAX(payment_id) AS latest_payment_id
-                        FROM payments
-                        GROUP BY enrollment_id
-                    ) latest ON latest.latest_payment_id = p1.payment_id
-                ) p ON p.enrollment_id = e.enrollment_id
+                LEFT JOIN vw_latest_payment p ON p.enrollment_id = e.enrollment_id
                 WHERE e.user_id = %s
                 ORDER BY e.enrollment_date DESC, e.enrollment_id DESC
                 """,
@@ -617,6 +1124,146 @@ def get_dashboard_snapshot(user: User):
     }
 
 
+def get_admin_snapshot():
+    ensure_catalog_seeded()
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT
+                    SUM(CASE WHEN COALESCE(r.role_name, 'Student') = 'Student' THEN 1 ELSE 0 END) AS student_total,
+                    SUM(CASE WHEN COALESCE(r.role_name, 'Student') = 'Instructor' THEN 1 ELSE 0 END) AS instructor_total
+                FROM users u
+                LEFT JOIN roles r ON r.role_id = u.role_id
+                """
+            )
+            user_counts = cursor.fetchone() or {}
+
+            cursor.execute("SELECT COUNT(*) AS total FROM courses")
+            course_total = cursor.fetchone()["total"]
+
+            cursor.execute("SELECT COUNT(*) AS total FROM enrollments")
+            enrollment_total = cursor.fetchone()["total"]
+
+            cursor.execute(
+                """
+                SELECT COALESCE(SUM(amount), 0) AS total
+                FROM payments
+                WHERE payment_status = 'Paid'
+                """
+            )
+            revenue_total = float(cursor.fetchone()["total"] or 0)
+
+            cursor.execute(
+                """
+                SELECT
+                    c.Course_id AS course_id,
+                    c.course_name,
+                    COALESCE(cat.category_name, 'Uncategorized') AS category_name,
+                    COALESCE(instructor.username, 'TBA') AS instructor_name,
+                    COALESCE(enrollment_stats.enrollment_total, 0) AS enrollment_total,
+                    COALESCE(review_stats.avg_rating, 0) AS avg_rating
+                FROM courses c
+                LEFT JOIN categories cat ON cat.category_id = c.category_id
+                LEFT JOIN users instructor ON instructor.user_id = c.instructor_id
+                LEFT JOIN (
+                    SELECT course_id, COUNT(*) AS enrollment_total
+                    FROM enrollments
+                    GROUP BY course_id
+                ) enrollment_stats ON enrollment_stats.course_id = c.Course_id
+                LEFT JOIN (
+                    SELECT course_id, ROUND(AVG(rating), 1) AS avg_rating
+                    FROM reviews
+                    GROUP BY course_id
+                ) review_stats ON review_stats.course_id = c.Course_id
+                ORDER BY enrollment_total DESC, avg_rating DESC, c.course_name ASC
+                LIMIT 5
+                """
+            )
+            top_courses = cursor.fetchall()
+
+            cursor.execute(
+                """
+                SELECT
+                    u.user_id,
+                    u.username,
+                    u.email,
+                    COALESCE(enrollment_stats.enrolled_total, 0) AS enrolled_total,
+                    COALESCE(enrollment_stats.completed_total, 0) AS completed_total,
+                    enrollment_stats.last_enrollment_date
+                FROM users u
+                LEFT JOIN roles r ON r.role_id = u.role_id
+                LEFT JOIN (
+                    SELECT
+                        e.user_id,
+                        COUNT(*) AS enrolled_total,
+                        SUM(CASE WHEN e.status = 'Completed' THEN 1 ELSE 0 END) AS completed_total,
+                        MAX(e.enrollment_date) AS last_enrollment_date
+                    FROM enrollments e
+                    GROUP BY e.user_id
+                ) enrollment_stats ON enrollment_stats.user_id = u.user_id
+                WHERE COALESCE(r.role_name, 'Student') = 'Student'
+                ORDER BY enrolled_total DESC, u.created_at DESC, u.user_id DESC
+                LIMIT 10
+                """
+            )
+            students = cursor.fetchall()
+
+            cursor.execute(
+                """
+                SELECT
+                    u.user_id,
+                    u.username,
+                    u.email,
+                    COALESCE(course_stats.course_total, 0) AS course_total,
+                    COALESCE(course_stats.enrollment_total, 0) AS enrollment_total,
+                    COALESCE(course_stats.avg_rating, 0) AS avg_rating
+                FROM users u
+                LEFT JOIN roles r ON r.role_id = u.role_id
+                LEFT JOIN (
+                    SELECT
+                        c.instructor_id,
+                        COUNT(*) AS course_total,
+                        COALESCE(SUM(enrollment_stats.enrollment_total), 0) AS enrollment_total,
+                        COALESCE(ROUND(AVG(review_stats.avg_rating), 1), 0) AS avg_rating
+                    FROM courses c
+                    LEFT JOIN (
+                        SELECT course_id, COUNT(*) AS enrollment_total
+                        FROM enrollments
+                        GROUP BY course_id
+                    ) enrollment_stats ON enrollment_stats.course_id = c.Course_id
+                    LEFT JOIN (
+                        SELECT course_id, AVG(rating) AS avg_rating
+                        FROM reviews
+                        GROUP BY course_id
+                    ) review_stats ON review_stats.course_id = c.Course_id
+                    GROUP BY c.instructor_id
+                ) course_stats ON course_stats.instructor_id = u.user_id
+                WHERE COALESCE(r.role_name, 'Student') = 'Instructor'
+                ORDER BY enrollment_total DESC, course_total DESC, u.username ASC
+                LIMIT 10
+                """
+            )
+            instructors = cursor.fetchall()
+    finally:
+        connection.close()
+
+    return {
+        "stats": {
+            "student_total": user_counts.get("student_total", 0) or 0,
+            "instructor_total": user_counts.get("instructor_total", 0) or 0,
+            "course_total": course_total,
+            "enrollment_total": enrollment_total,
+            "revenue_total": revenue_total,
+        },
+        "students": students,
+        "instructors": instructors,
+        "top_courses": top_courses,
+        "favorite_instructors": instructors[:5],
+    }
+
+
 def can_manage_course(course_id: int, user: User) -> bool:
     if user.is_admin:
         return True
@@ -647,6 +1294,19 @@ def course_manager_required(view):
     return wrapped
 
 
+def admin_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for("login", next=request.path))
+        if not current_user.is_admin:
+            flash("Admin access only.", "error")
+            return redirect(url_for("dashboard"))
+        return view(*args, **kwargs)
+
+    return wrapped
+
+
 @login_manager.user_loader
 def load_user(user_id: str):
     row = get_user_by_id(user_id)
@@ -657,7 +1317,11 @@ def load_user(user_id: str):
 def inject_layout_context():
     return {
         "course_count": get_course_count(),
+        "course_accents": COURSE_ACCENTS,
         "current_year": datetime.now().year,
+        "dashboard_endpoint": "admin_dashboard"
+        if current_user.is_authenticated and current_user.is_admin
+        else "dashboard",
     }
 
 
@@ -684,26 +1348,26 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
+        if current_user.is_admin:
+            return redirect(url_for("admin_dashboard"))
         return redirect(url_for("dashboard"))
 
-    role_options = get_registration_roles()
-    allowed_roles = {str(role["role_id"]) for role in role_options}
+    student_role_id = get_role_id_by_name("Student")
+    if student_role_id is None:
+        flash("Student registration is not available right now.", "error")
+        return redirect(url_for("index"))
 
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
-        role_id = request.form.get("role_id", "")
 
         if len(username) < 2:
             flash("Please enter a username with at least 2 characters.", "error")
-            return render_template("register.html", role_options=role_options)
+            return render_template("register.html")
         if len(password) < 8:
             flash("Please use a password with at least 8 characters.", "error")
-            return render_template("register.html", role_options=role_options)
-        if role_id not in allowed_roles:
-            flash("Please choose a valid role.", "error")
-            return render_template("register.html", role_options=role_options)
+            return render_template("register.html")
 
         connection = get_db_connection()
         try:
@@ -711,14 +1375,14 @@ def register():
                 cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
                 if cursor.fetchone():
                     flash("That email is already registered. Try logging in instead.", "error")
-                    return render_template("register.html", role_options=role_options)
+                    return render_template("register.html")
 
                 cursor.execute(
                     """
                     INSERT INTO users (username, email, password, role_id, created_at)
                     VALUES (%s, %s, %s, %s, NOW())
                     """,
-                    (username, email, generate_password_hash(password), role_id),
+                    (username, email, generate_password_hash(password), student_role_id),
                 )
                 connection.commit()
                 user_id = cursor.lastrowid
@@ -727,37 +1391,91 @@ def register():
 
         user_row = get_user_by_id(user_id)
         login_user(User(user_row))
-        flash("Your account has been created successfully.", "success")
+        flash("Your student account has been created successfully.", "success")
         return redirect(url_for("dashboard"))
 
-    return render_template("register.html", role_options=role_options)
+    return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
+        if current_user.is_admin:
+            return redirect(url_for("admin_dashboard"))
         return redirect(url_for("dashboard"))
 
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
+        identifier = request.form.get("identifier", "").strip()
         password = request.form.get("password", "")
+        next_page = request.args.get("next") or request.form.get("next")
 
-        user_row = get_user_by_email(email)
+        user_row = get_user_by_username(identifier, role_name="Admin")
+        if user_row is None:
+            user_row = get_user_by_email(identifier.lower())
+
         if user_row is None or not password_matches(user_row["password"], password):
-            flash("Email or password did not match our records.", "error")
+            flash("Username/email or password did not match our records.", "error")
             return render_template("login.html")
 
         login_user(User(user_row))
+        if user_row["role_name"].lower() == "admin":
+            flash("Welcome back. The admin dashboard is ready.", "success")
+            return redirect(next_page or url_for("admin_dashboard"))
+
         flash("Welcome back. Your dashboard is ready.", "success")
-        next_page = request.args.get("next") or request.form.get("next")
         return redirect(next_page or url_for("dashboard"))
 
     return render_template("login.html")
 
 
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    next_page = request.args.get("next")
+    if next_page:
+        return redirect(url_for("login", next=next_page))
+    return redirect(url_for("login"))
+
+
 @app.route("/about")
 def about():
     return render_template("about.html", platform_stats=get_platform_stats())
+
+
+@app.route("/admin/categories", methods=["POST"])
+@admin_required
+def create_category():
+    category_name = request.form.get("category_name", "").strip()
+
+    if len(category_name) < 2:
+        flash("Category name must be at least 2 characters.", "error")
+        return redirect(url_for("admin_dashboard", _anchor="categories"))
+
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT category_id
+                FROM categories
+                WHERE LOWER(category_name) = LOWER(%s)
+                LIMIT 1
+                """,
+                (category_name,),
+            )
+            if cursor.fetchone():
+                flash("That category already exists.", "info")
+                return redirect(url_for("admin_dashboard", _anchor="categories"))
+
+            cursor.execute(
+                "INSERT INTO categories (category_name) VALUES (%s)",
+                (fit_text(category_name, 45),),
+            )
+            connection.commit()
+    finally:
+        connection.close()
+
+    flash("Category added successfully.", "success")
+    return redirect(url_for("admin_dashboard", _anchor="categories"))
 
 
 @app.route("/course")
@@ -826,6 +1544,55 @@ def create_course():
     return render_template("create_course.html", categories=categories)
 
 
+@app.route("/courses/<int:course_id>/edit", methods=["POST"])
+@course_manager_required
+def edit_course(course_id: int):
+    if not can_manage_course(course_id, current_user):
+        flash("You can only edit courses assigned to you.", "error")
+        return redirect(url_for("course_detail", course_id=course_id))
+
+    categories = get_categories()
+    course_name = request.form.get("course_name", "").strip()
+    description = request.form.get("description", "").strip()
+    price_raw = request.form.get("price", "").strip()
+    category_id = request.form.get("category_id", "").strip()
+
+    if not course_name:
+        flash("Course name is required.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="course-settings"))
+
+    try:
+        price = Decimal(price_raw)
+        if price < 0:
+            raise InvalidOperation
+    except (InvalidOperation, ValueError):
+        flash("Please enter a valid course price.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="course-settings"))
+
+    valid_categories = {str(category["category_id"]) for category in categories}
+    if category_id not in valid_categories:
+        flash("Please choose a valid category.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="course-settings"))
+
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE courses
+                SET course_name = %s, description = %s, price = %s, category_id = %s
+                WHERE Course_id = %s
+                """,
+                (course_name, description or None, price, category_id, course_id),
+            )
+            connection.commit()
+    finally:
+        connection.close()
+
+    flash("Course details updated.", "success")
+    return redirect(url_for("course_detail", course_id=course_id, _anchor="course-settings"))
+
+
 @app.route("/courses/<int:course_id>")
 def course_detail(course_id: int):
     viewer_id = current_user.id if current_user.is_authenticated else None
@@ -837,9 +1604,24 @@ def course_detail(course_id: int):
     return render_template(
         "course_detail.html",
         detail=detail,
+        categories=get_categories(),
         payment_methods=PAYMENT_METHODS,
         can_edit=current_user.is_authenticated and can_manage_course(course_id, current_user),
     )
+
+
+@app.route("/courses/<int:course_id>/modules/<int:content_id>")
+def open_course_module(course_id: int, content_id: int):
+    module = get_course_content_item(course_id, content_id)
+    if module is None:
+        flash("That module could not be found.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="content"))
+
+    if current_user.is_authenticated and can_open_course_modules(course_id, current_user):
+        return redirect(module["video_url"])
+
+    flash("Enroll in this course to open the module.", "info")
+    return redirect(url_for("course_detail", course_id=course_id, _anchor="access-panel"))
 
 
 @app.route("/courses/<int:course_id>/content", methods=["POST"])
@@ -881,6 +1663,53 @@ def add_course_content(course_id: int):
 
     flash("Module added to the course.", "success")
     return redirect(url_for("course_detail", course_id=course_id))
+
+
+@app.route("/courses/<int:course_id>/content/<int:content_id>/edit", methods=["POST"])
+@course_manager_required
+def edit_course_content(course_id: int, content_id: int):
+    if not can_manage_course(course_id, current_user):
+        flash("You can only edit courses assigned to you.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="content"))
+
+    module = get_course_content_item(course_id, content_id)
+    if module is None:
+        flash("That module could not be found.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="content"))
+
+    title = request.form.get("title", "").strip()
+    video_url = request.form.get("video_url", "").strip()
+    module_number_raw = request.form.get("module_number", "").strip()
+
+    if not title or not video_url or not module_number_raw:
+        flash("Module title, video URL, and module number are required.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="content"))
+
+    try:
+        module_number = int(module_number_raw)
+        if module_number < 1:
+            raise ValueError
+    except ValueError:
+        flash("Module number must be a positive integer.", "error")
+        return redirect(url_for("course_detail", course_id=course_id, _anchor="content"))
+
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE course_content
+                SET title = %s, video_url = %s, module_number = %s
+                WHERE content_id = %s AND course_id = %s
+                """,
+                (title, video_url, module_number, content_id, course_id),
+            )
+            connection.commit()
+    finally:
+        connection.close()
+
+    flash("Module updated successfully.", "success")
+    return redirect(url_for("course_detail", course_id=course_id, _anchor="content"))
 
 
 @app.route("/enroll/<int:course_id>", methods=["POST"])
@@ -1051,9 +1880,41 @@ def submit_review(course_id: int):
     return redirect(url_for("course_detail", course_id=course_id))
 
 
+@app.route("/courses/<int:course_id>/reviews/<int:review_id>/delete", methods=["POST"])
+@admin_required
+def delete_review(course_id: int, review_id: int):
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT review_id
+                FROM reviews
+                WHERE review_id = %s AND course_id = %s
+                LIMIT 1
+                """,
+                (review_id, course_id),
+            )
+            review_row = cursor.fetchone()
+            if review_row is None:
+                flash("That review could not be found.", "error")
+                return redirect(url_for("course_detail", course_id=course_id, _anchor="reviews"))
+
+            cursor.callproc("sp_delete_review", (review_id, course_id))
+            connection.commit()
+    finally:
+        connection.close()
+
+    flash("Review deleted successfully.", "success")
+    return redirect(url_for("course_detail", course_id=course_id, _anchor="reviews"))
+
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
+    if current_user.is_admin:
+        return redirect(url_for("admin_dashboard"))
+
     snapshot = get_dashboard_snapshot(current_user)
     return render_template(
         "dashboard.html",
@@ -1062,6 +1923,22 @@ def dashboard():
         recommendations=snapshot["recommendations"],
         managed_courses=snapshot["managed_courses"],
         stats=snapshot["stats"],
+    )
+
+
+@app.route("/admin/dashboard")
+@admin_required
+def admin_dashboard():
+    snapshot = get_admin_snapshot()
+    return render_template(
+        "admin_dashboard.html",
+        user=current_user,
+        categories=get_categories(),
+        stats=snapshot["stats"],
+        students=snapshot["students"],
+        instructors=snapshot["instructors"],
+        top_courses=snapshot["top_courses"],
+        favorite_instructors=snapshot["favorite_instructors"],
     )
 
 
