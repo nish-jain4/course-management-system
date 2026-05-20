@@ -442,10 +442,7 @@ class User(UserMixin):
 def get_db_connection():
     database_name = (app.config.get("DB_NAME") or "").strip()
     if not database_name:
-        raise RuntimeError(
-            "Database name is not configured. Set JAWSDB_URL, JAWSDB_MARIA_URL, "
-            "CLEARDB_DATABASE_URL, DATABASE_URL, or DB_NAME before starting the app."
-        )
+        raise RuntimeError("Database name is not configured. Set DB_NAME before starting the app.")
 
     connect_kwargs: dict[str, Any] = {
         "host": app.config["DB_HOST"],
@@ -458,10 +455,6 @@ def get_db_connection():
         "autocommit": False,
         "connect_timeout": app.config["DB_CONNECT_TIMEOUT"],
     }
-
-    ssl_ca = app.config.get("DB_SSL_CA")
-    if ssl_ca:
-        connect_kwargs["ssl"] = {"ca": ssl_ca}
 
     return pymysql.connect(**connect_kwargs)
 
