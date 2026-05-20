@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from functools import wraps
+from threading import Lock
 from typing import Any
 
 import pymysql
@@ -270,7 +271,150 @@ SAMPLE_COURSES = [
     for course in DEMO_COURSES[:3]
 ]
 
+SCHEMA_STATEMENTS = [
+    """
+    CREATE TABLE IF NOT EXISTS roles (
+        role_id INT NOT NULL,
+        role_name VARCHAR(45) NOT NULL,
+        PRIMARY KEY (role_id),
+        UNIQUE KEY uq_roles_role_name (role_name)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS users (
+        user_id INT NOT NULL AUTO_INCREMENT,
+        username VARCHAR(100) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        role_id INT NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id),
+        UNIQUE KEY uq_users_email (email),
+        KEY idx_users_role_id (role_id),
+        CONSTRAINT fk_users_role
+            FOREIGN KEY (role_id) REFERENCES roles (role_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS categories (
+        category_id INT NOT NULL AUTO_INCREMENT,
+        category_name VARCHAR(45) NOT NULL,
+        PRIMARY KEY (category_id),
+        UNIQUE KEY uq_categories_category_name (category_name)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS courses (
+        course_id INT NOT NULL AUTO_INCREMENT,
+        course_name VARCHAR(255) NOT NULL,
+        description TEXT NULL,
+        price DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+        category_id INT NULL,
+        instructor_id INT NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (course_id),
+        KEY idx_courses_category_id (category_id),
+        KEY idx_courses_instructor_id (instructor_id),
+        CONSTRAINT fk_courses_category
+            FOREIGN KEY (category_id) REFERENCES categories (category_id)
+            ON DELETE SET NULL,
+        CONSTRAINT fk_courses_instructor
+            FOREIGN KEY (instructor_id) REFERENCES users (user_id)
+            ON DELETE SET NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS course_content (
+        content_id INT NOT NULL AUTO_INCREMENT,
+        title VARCHAR(255) NOT NULL,
+        video_url VARCHAR(1000) NOT NULL,
+        module_number INT NOT NULL,
+        course_id INT NOT NULL,
+        PRIMARY KEY (content_id),
+        KEY idx_course_content_course_id (course_id),
+        KEY idx_course_content_module_number (course_id, module_number),
+        CONSTRAINT fk_course_content_course
+            FOREIGN KEY (course_id) REFERENCES courses (course_id)
+            ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS enrollments (
+        enrollment_id INT NOT NULL AUTO_INCREMENT,
+        enrollment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        status VARCHAR(45) NOT NULL,
+        user_id INT NOT NULL,
+        course_id INT NOT NULL,
+        PRIMARY KEY (enrollment_id),
+        UNIQUE KEY uq_enrollments_user_course (user_id, course_id),
+        KEY idx_enrollments_course_id (course_id),
+        CONSTRAINT fk_enrollments_user
+            FOREIGN KEY (user_id) REFERENCES users (user_id)
+            ON DELETE CASCADE,
+        CONSTRAINT fk_enrollments_course
+            FOREIGN KEY (course_id) REFERENCES courses (course_id)
+            ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS payments (
+        payment_id INT NOT NULL AUTO_INCREMENT,
+        amount DECIMAL(10, 2) NOT NULL,
+        payment_method VARCHAR(45) NOT NULL,
+        payment_status VARCHAR(45) NOT NULL,
+        payment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        enrollment_id INT NOT NULL,
+        PRIMARY KEY (payment_id),
+        KEY idx_payments_enrollment_id (enrollment_id),
+        KEY idx_payments_latest (enrollment_id, payment_id),
+        CONSTRAINT fk_payments_enrollment
+            FOREIGN KEY (enrollment_id) REFERENCES enrollments (enrollment_id)
+            ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS reviews (
+        review_id INT NOT NULL AUTO_INCREMENT,
+        user_id INT NOT NULL,
+        course_id INT NOT NULL,
+        rating DECIMAL(3, 1) NOT NULL,
+        comment TEXT NULL,
+        review_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (review_id),
+        UNIQUE KEY uq_reviews_user_course (user_id, course_id),
+        KEY idx_reviews_course_id (course_id),
+        CONSTRAINT fk_reviews_user
+            FOREIGN KEY (user_id) REFERENCES users (user_id)
+            ON DELETE CASCADE,
+        CONSTRAINT fk_reviews_course
+            FOREIGN KEY (course_id) REFERENCES courses (course_id)
+            ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    """,
+]
+
+LATEST_PAYMENT_JOIN = """
+                LEFT JOIN (
+                    SELECT
+                        p.payment_id,
+                        p.enrollment_id,
+                        p.amount,
+                        p.payment_method,
+                        p.payment_status,
+                        p.payment_date
+                    FROM payments p
+                    INNER JOIN (
+                        SELECT enrollment_id, MAX(payment_id) AS latest_payment_id
+                        FROM payments
+                        GROUP BY enrollment_id
+                    ) latest_payment_lookup
+                        ON latest_payment_lookup.latest_payment_id = p.payment_id
+                ) latest_payment ON latest_payment.enrollment_id = e.enrollment_id
+"""
+
 CATALOG_BOOTSTRAPPED = False
+SCHEMA_BOOTSTRAPPED = False
+BOOTSTRAP_LOCK = Lock()
 
 
 class User(UserMixin):
@@ -296,16 +440,54 @@ class User(UserMixin):
 
 
 def get_db_connection():
-    return pymysql.connect(
-        host=app.config["DB_HOST"],
-        user=app.config["DB_USER"],
-        password=app.config["DB_PASSWORD"],
-        db=app.config["DB_NAME"],
-        port=app.config["DB_PORT"],
-        charset="utf8mb4",
-        cursorclass=pymysql.cursors.DictCursor,
-        autocommit=False,
-    )
+    database_name = (app.config.get("DB_NAME") or "").strip()
+    if not database_name:
+        raise RuntimeError(
+            "Database name is not configured. Set JAWSDB_URL, JAWSDB_MARIA_URL, "
+            "CLEARDB_DATABASE_URL, DATABASE_URL, or DB_NAME before starting the app."
+        )
+
+    connect_kwargs: dict[str, Any] = {
+        "host": app.config["DB_HOST"],
+        "user": app.config["DB_USER"],
+        "password": app.config["DB_PASSWORD"],
+        "db": database_name,
+        "port": app.config["DB_PORT"],
+        "charset": "utf8mb4",
+        "cursorclass": pymysql.cursors.DictCursor,
+        "autocommit": False,
+        "connect_timeout": app.config["DB_CONNECT_TIMEOUT"],
+    }
+
+    ssl_ca = app.config.get("DB_SSL_CA")
+    if ssl_ca:
+        connect_kwargs["ssl"] = {"ca": ssl_ca}
+
+    return pymysql.connect(**connect_kwargs)
+
+
+def ensure_schema_ready():
+    global SCHEMA_BOOTSTRAPPED
+
+    if SCHEMA_BOOTSTRAPPED:
+        return
+
+    with BOOTSTRAP_LOCK:
+        if SCHEMA_BOOTSTRAPPED:
+            return
+
+        connection = get_db_connection()
+        try:
+            with connection.cursor() as cursor:
+                for statement in SCHEMA_STATEMENTS:
+                    cursor.execute(statement)
+            connection.commit()
+            SCHEMA_BOOTSTRAPPED = True
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
 
 
 def fit_text(value: str | None, max_length: int) -> str | None:
@@ -319,6 +501,8 @@ def ensure_catalog_seeded():
 
     if CATALOG_BOOTSTRAPPED:
         return
+
+    ensure_schema_ready()
 
     connection = get_db_connection()
     try:
@@ -903,20 +1087,20 @@ def get_course_detail(course_id: int, user_id: int | None):
             review_rows = cursor.fetchall()
 
             cursor.execute(
-                """
+                f"""
                 SELECT
                     e.enrollment_id,
                     e.status,
                     e.enrollment_date,
-                    p.payment_id,
-                    p.amount,
-                    p.payment_method,
-                    p.payment_status,
-                    p.payment_date
+                    latest_payment.payment_id,
+                    latest_payment.amount,
+                    latest_payment.payment_method,
+                    latest_payment.payment_status,
+                    latest_payment.payment_date
                 FROM enrollments e
-                LEFT JOIN vw_latest_payment p ON p.enrollment_id = e.enrollment_id
+                {LATEST_PAYMENT_JOIN}
                 WHERE e.user_id = %s AND e.course_id = %s
-                ORDER BY p.payment_id DESC
+                ORDER BY latest_payment.payment_id DESC
                 LIMIT 1
                 """,
                 (viewer_id, course_id),
@@ -995,7 +1179,7 @@ def get_dashboard_snapshot(user: User):
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                """
+                f"""
                 SELECT
                     e.enrollment_id,
                     e.status,
@@ -1007,10 +1191,10 @@ def get_dashboard_snapshot(user: User):
                     COALESCE(cat.category_name, 'Uncategorized') AS category_name,
                     COALESCE(instructor.username, 'TBA') AS instructor_name,
                     COALESCE(module_stats.module_total, 0) AS module_total,
-                    p.amount,
-                    p.payment_method,
-                    p.payment_status,
-                    p.payment_date
+                    latest_payment.amount,
+                    latest_payment.payment_method,
+                    latest_payment.payment_status,
+                    latest_payment.payment_date
                 FROM enrollments e
                 JOIN courses c ON c.Course_id = e.course_id
                 LEFT JOIN categories cat ON cat.category_id = c.category_id
@@ -1020,7 +1204,7 @@ def get_dashboard_snapshot(user: User):
                     FROM course_content
                     GROUP BY course_id
                 ) module_stats ON module_stats.course_id = c.Course_id
-                LEFT JOIN vw_latest_payment p ON p.enrollment_id = e.enrollment_id
+                {LATEST_PAYMENT_JOIN}
                 WHERE e.user_id = %s
                 ORDER BY e.enrollment_date DESC, e.enrollment_id DESC
                 """,
@@ -1442,6 +1626,7 @@ def about():
 
 
 @app.route("/admin/categories", methods=["POST"])
+
 @admin_required
 def create_category():
     category_name = request.form.get("category_name", "").strip()
@@ -1900,7 +2085,13 @@ def delete_review(course_id: int, review_id: int):
                 flash("That review could not be found.", "error")
                 return redirect(url_for("course_detail", course_id=course_id, _anchor="reviews"))
 
-            cursor.callproc("sp_delete_review", (review_id, course_id))
+            cursor.execute(
+                """
+                DELETE FROM reviews
+                WHERE review_id = %s AND course_id = %s
+                """,
+                (review_id, course_id),
+            )
             connection.commit()
     finally:
         connection.close()
@@ -1951,4 +2142,8 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=app.config["PORT"],
+        debug=app.config["DEBUG"],
+    )
